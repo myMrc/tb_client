@@ -14,6 +14,9 @@
   -webkit-text-size-adjust: 100%;
 }
 
+#app{
+}
+
 a {
   font-weight: 500;
   color: #646cff;
@@ -25,7 +28,7 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
+  /* display: flex; */
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
@@ -60,10 +63,12 @@ button:focus-visible {
 }
 
 #app {
-  max-width: 1280px;
+  padding: 0;
   margin: 0 auto;
-  padding: 2rem;
+  color: #dbdbdb;
   text-align: center;
+  font-family: cursive;
+  background-color: #213547;
 }
 
 @media (prefers-color-scheme: light) {

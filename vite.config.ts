@@ -14,5 +14,5 @@ export default defineConfig({
         rewrite: path => path.replace(/^\/api/, '') // 重写 api 为 空，就是去掉它
       }
     }
-  },
+  }
 })

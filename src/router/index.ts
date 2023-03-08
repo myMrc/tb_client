@@ -1,95 +1,46 @@
 import { createRouter,createWebHashHistory } from "vue-router";
+import { Routr } from "../model/index";
 
+//设置路由
+const clientRouters = [
+  {
+    path: '/',
+    redirect: '/MyMain'
+  },
+  {
+    path: '/MyMain',
+    name: 'MyMain',
+    component: () => import(/* webpackChunkName: "introduce" */ '../views/MyMain.vue')
+  },
+  {
+    path: '/Login',
+    name: 'Login',
+    component: () => import(/* webpackChunkName: "introduce" */ '../views/Login.vue')
+  }
+]
+
+//创建路由
 const router = createRouter({
-    history: createWebHashHistory(), // hash模式：createWebHashHistory，history模式：createWebHistory
-    routes: [
-      {
-        path: '/',
-        redirect: '/introduce'
-      },
-      {
-        path: '/introduce',
-        name: 'introduce',
-        component: () => import(/* webpackChunkName: "introduce" */ '../views/Introduce.vue')
-      },
-      {
-        path: '/dashboard',
-        name: 'dashboard',
-        component: () => import(/* webpackChunkName: "dashboard" */ '../views/Index.vue')
-      },
-      {
-        path: '/login',
-        name: 'login',
-        component: () => import(/* webpackChunkName: "login" */ '../views/Login.vue')
-      },
-      {
-        path: '/add',
-        name: 'add',
-        component: () => import(/* webpackChunkName: "add" */ '../views/AddGood.vue')
-      },
-      {
-        path: '/swiper',
-        name: 'swiper',
-        component: () => import(/* webpackChunkName: "swiper" */ '../views/Swiper.vue')
-      },
-      {
-        path: '/hot',
-        name: 'hot',
-        component: () => import(/* webpackChunkName: "hot" */ '../views/IndexConfig.vue')
-      },
-      {
-        path: '/new',
-        name: 'new',
-        component: () => import(/* webpackChunkName: "new" */ '../views/IndexConfig.vue')
-      },
-      {
-        path: '/recommend',
-        name: 'recommend',
-        component: () => import(/* webpackChunkName: "recommend" */ '../views/IndexConfig.vue')
-      },
-      {
-        path: '/category',
-        name: 'category',
-        component: () => import(/* webpackChunkName: "category" */ '../views/Category.vue'),
-        children: [
-          {
-            path: '/category/level2',
-            name: 'level2',
-            component: () => import(/* webpackChunkName: "level2" */ '../views/Category.vue'),
-          },
-          {
-            path: '/category/level3',
-            name: 'level3',
-            component: () => import(/* webpackChunkName: "level3" */ '../views/Category.vue'),
-          }
-        ]
-      },
-      {
-        path: '/good',
-        name: 'good',
-        component: () => import(/* webpackChunkName: "new" */ '../views/Good.vue')
-      },
-      {
-        path: '/guest',
-        name: 'guest',
-        component: () => import(/* webpackChunkName: "guest" */ '../views/Guest.vue')
-      },
-      {
-        path: '/order',
-        name: 'order',
-        component: () => import(/* webpackChunkName: "order" */ '../views/Order.vue')
-      },
-      {
-        path: '/order_detail',
-        name: 'order_detail',
-        component: () => import(/* webpackChunkName: "order_detail" */ '../views/OrderDetail.vue')
-      },
-      {
-        path: '/account',
-        name: 'account',
-        component: () => import(/* webpackChunkName: "account" */ '../views/Account.vue')
-      }
-    ]
-  })
+  history: createWebHashHistory(), // hash模式：createWebHashHistory，history模式：createWebHistory
+  routes: clientRouters
+})
+
+//移除路由
+export function resetRouters(){
+  for (const r of clientRouters) {
+    router.addRoute(r)
+  }
+}
+
+//添加路由
+export function addRouters(routerlist : Routr[]){
+  for (const r of routerlist) {
+    router.addRoute({
+      path:r.path,
+      name:r.name,
+      component: () => import(r.component)
+    })
+  }
+}
 
 export default router

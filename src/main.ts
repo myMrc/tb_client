@@ -25,11 +25,14 @@ import {
     ElRadioGroup,
     ElRadio,
     ElSelect,
-    ElOption
+    ElOption,
+    ElDropdown
   } from 'element-plus'
 import './style.css'
 import App from './App.vue'
 import router from './router'
+import 'element-plus/dist/index.css'
+import 'element-plus/theme-chalk/dark/css-vars.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
 const app = createApp(App)
@@ -66,5 +69,6 @@ app.use(ElButton)
   .use(ElRadio)
   .use(ElSelect)
   .use(ElOption)
+  .use(ElDropdown)
 
   app.mount('#app')
