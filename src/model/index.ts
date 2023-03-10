@@ -1,11 +1,17 @@
-// 路由
-export interface Routr{
-    path:string,
-    name:string,
-    component:string
-  }
 // 用户
-export interface user{
-    account:string,
-    password:string
-  }
+export interface User{
+  account:string,
+  password:string
+}
+// 路由
+export interface Router{
+  index:string,
+  title:string,
+  chileth: Routers[]
+}
+// 子路由
+export interface Routers{
+  path:string,
+  name:string,
+  component:string
+}
