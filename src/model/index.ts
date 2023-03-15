@@ -1,6 +1,6 @@
 // 用户
 export interface User{
-  account:string,
+  username:string,
   password:string
 }
 // 路由

@@ -6,12 +6,4 @@
     </div>
 </template>
 <script lang="ts" setup>
-import { onMounted } from 'vue'
-import { userInfo } from '../axios/index'
-
-onMounted(()=>{
-    userInfo().then(res => {
-      console.log(res)
-    })
-})
 </script>
