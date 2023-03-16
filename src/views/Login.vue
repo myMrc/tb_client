@@ -60,11 +60,11 @@
   //登录
   const loginFun = ()=>{
     login(state.user).then(res => {
-      res.data.userId == 1? saveRouter.value=supRouter : saveRouter.value=disRouter
+      res.data == "1"? saveRouter.value=supRouter : saveRouter.value=disRouter
       // JSON.parse(atob(token.split(".")[1])).sub=="admin"? saveRouter.value=supRouter : saveRouter.value=disRouter
       resetRouter()
       addRouter(saveRouter.value)
-      router.push("/")
+      window.location.href = "/"
     })
   }
 </script>

@@ -6,15 +6,13 @@
       <el-header class="head" v-show="state.showMenu">
         <div style="display: flex;justify-content: center">
           <img src="./assets/vue.svg" width="30" />
-          <h5 class="mb-2" style="margin: 20px 5px;" @click="myMain"><i>HELLO WORLD</i></h5>
+          <h5 style="margin: 20px 5px;" @click="myMain"><i>HELLO WORLD</i></h5>
         </div>
         <h3 style="font-family: 小米兰亭">企业网络分销平台</h3>
         <el-dropdown @command="handleCommand">
               <span class="el-dropdown-link">
-                My_Account
-                <el-icon class="el-icon--right" style="width: 30px;">
-                  <arrow-down />
-                </el-icon>
+                  <Avatar width="35"/>
+                   myAccount
               </span>
           <template #dropdown>
             <el-dropdown-menu>
@@ -37,9 +35,12 @@
           >   <!-- menu菜单 -->
             <el-sub-menu v-for="menu in saveRouter" :index="menu.index">
               <template #title>
+                <Index class="icon" :icon="menu.icon"></Index>
                 <span>{{ menu.title }}</span>
               </template>
-              <el-menu-item v-for="menus in menu.chileth" :index="menus.path">{{ menus.name }}</el-menu-item>
+              <el-menu-item v-for="menus in menu.chileth" :index="menus.path">
+                <Index class="icon" :icon="menus.icon"></Index>{{ menus.name }}
+              </el-menu-item>
             </el-sub-menu>
           </el-menu>
         </el-aside>
@@ -53,17 +54,18 @@
 </template>
 
 <script lang="ts" setup>
-import {computed, onMounted, reactive} from 'vue'
+import { onMounted, reactive} from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { saveRouter } from './router/index'
 import { localGet, localRemove } from './utils/index'
-import {userInfo} from "./axios";
+import { userInfo } from "./axios";
+import { Index } from './components/index'
+import { useTitle } from './store/index'
 
 const noMenu = ['/login']
 const router = useRouter()
 const state = reactive({
-  name: 'title',
   userInfo: {},
   showMenu: true,
   defaultOpen: ['1', '2', '3', '4']
@@ -81,8 +83,9 @@ onMounted(()=>{
 router.beforeEach((to, from, next) => {
   to.path == '/login'? next() : !localGet('token')? next(to.path ='/login' ) : next()
   state.showMenu = !noMenu.includes(to.path)
-  state.name = to.name as keyof typeof state
-  document.title = to.name as keyof typeof state
+  document.title = to.name
+  useTitle().text = to.name
+  // document.title = to.name as keyof typeof state
 })
 
 //退出登录
@@ -117,5 +120,9 @@ const myMain = () => {
   display: flex;
   justify-content: space-between;
   box-shadow: var(--el-box-shadow-light);
+}
+.icon{
+  width: 20px;
+  margin-right: 5px;
 }
 </style>

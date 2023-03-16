@@ -2,7 +2,7 @@
   <el-card class="box-card">
     <template #header>
       <div class="card-header">
-        <span>username</span>
+        <span>{{useTitle().text}}</span>
         <el-radio-group v-model="size">
           <el-radio label="large">Large</el-radio>
           <el-radio>Default</el-radio>
@@ -11,36 +11,50 @@
 <!--        <el-button class="button" text>Operation button</el-button>-->
       </div>
     </template>
-
+    <el-row>
+      <el-col :span="12" style="text-align: left">
+        <span >Vertical list with border</span>
+      </el-col>
+      <el-col :span="12" style="text-align: right">
+        <el-button :icon="Edit" >修改信息</el-button>
+      </el-col>
+    </el-row>
     <el-descriptions
-        title="Vertical list with border"
         direction="vertical"
         :column="2"
         :size="size"
         border
     >
-      <el-descriptions-item label="企业名称">阿里巴巴网络科技有限公司</el-descriptions-item>
-      <el-descriptions-item label="企业介绍">欢迎加入阿里巴巴集团</el-descriptions-item>
-      <el-descriptions-item label="联系人">小马</el-descriptions-item>
-      <el-descriptions-item label="手机号">18100000000</el-descriptions-item>
-      <el-descriptions-item label="邮箱">18100000000@qq.com</el-descriptions-item>
+      <!--        title="Vertical list with border"-->
+      <el-descriptions-item label="企业名称">{{state.userInfo.companyName}}</el-descriptions-item>
+      <el-descriptions-item label="企业介绍">{{state.userInfo.companyInfo}}</el-descriptions-item>
+      <el-descriptions-item label="联系人">{{state.userInfo.contacts}}</el-descriptions-item>
+      <el-descriptions-item label="手机号">{{state.userInfo.phone}}</el-descriptions-item>
+      <el-descriptions-item label="邮箱">{{state.userInfo.email}}</el-descriptions-item>
       <el-descriptions-item label="旺旺">
-        <el-tag size="small">School</el-tag>
+        <el-tag size="small">{{state.userInfo.wang}}</el-tag>
       </el-descriptions-item>
       <el-descriptions-item label="主营类目"
-      >No.1188, Wuzhong Avenue, Wuzhong District, Suzhou, Jiangsu Province
+      >No.1188：{{state.userInfo.mainClass}}
       </el-descriptions-item>
       <el-descriptions-item label="主营品牌"
-      >No.1188, Wuzhong Avenue, Wuzhong District, Suzhou, Jiangsu Province
+      >No.1188：{{state.userInfo.mainBrand}}
       </el-descriptions-item>
     </el-descriptions>
   </el-card>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import {computed, onMounted, reactive, ref} from 'vue'
+import { Edit } from '@element-plus/icons-vue'
+import { supCard } from '../axios/index';
+import { useTitle } from '../store/index'
 
 const size = ref('')
+const state = reactive({
+  userInfo: {}
+})
+
 const blockMargin = computed(() => {
   const marginMap = {
     large: '32px',
@@ -50,6 +64,12 @@ const blockMargin = computed(() => {
   return {
     marginTop: marginMap[size.value] || marginMap.default,
   }
+})
+
+onMounted(()=>{
+  supCard().then(res => {
+      state.userInfo = res.data
+  })
 })
 </script>
 
@@ -67,5 +87,6 @@ const blockMargin = computed(() => {
 
 .box-card {
   background: none;
+  padding-bottom: 10px;
 }
 </style>

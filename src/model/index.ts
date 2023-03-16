@@ -6,6 +6,7 @@ export interface User{
 // 路由
 export interface Router{
   index:string,
+  icon :string,
   title:string,
   chileth: Routers[]
 }
@@ -13,5 +14,10 @@ export interface Router{
 export interface Routers{
   path:string,
   name:string,
+  icon:string,
   component:string
+}
+//图标
+export interface Icon{
+  [p:string]:any
 }
