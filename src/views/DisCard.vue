@@ -8,7 +8,6 @@
           <el-radio>Default</el-radio>
           <el-radio label="small">Small</el-radio>
         </el-radio-group>
-        <!--        <el-button class="button" text>Operation button</el-button>-->
       </div>
     </template>
     <el-row>
@@ -16,69 +15,62 @@
         <span >Vertical list with border</span>
       </el-col>
       <el-col :span="12" style="text-align: right">
-        <el-button :icon="Edit" @click="dialogFormVisible = true">修改信息</el-button>
+        <el-button :icon="Edit" text type="primary" size="large" @click="onDialog">修改信息</el-button>
       </el-col>
     </el-row>
+
     <el-descriptions
-        direction="vertical"
-        :column="2"
+        :column="4"
         :size="size"
-        border
+        label-align="right"
     >
       <!--        title="Vertical list with border"-->
-      <el-descriptions-item label="店铺名称">{{state.userInfo.distributorName}}</el-descriptions-item>
-      <el-descriptions-item label="开店日期">{{state.userInfo.openingDate}}</el-descriptions-item>
-      <el-descriptions-item label="联系人">{{state.userInfo.contacts}}</el-descriptions-item>
-      <el-descriptions-item label="手机号">{{state.userInfo.phone}}</el-descriptions-item>
-      <el-descriptions-item label="邮箱">{{state.userInfo.email}}</el-descriptions-item>
-      <el-descriptions-item label="旺旺">
-        <el-tag size="small">{{state.userInfo.wang}}</el-tag>
-      </el-descriptions-item>
-      <el-descriptions-item label="主营类目"
-      >No.1188：{{state.userInfo.mainClass}}
-      </el-descriptions-item>
-      <el-descriptions-item label="主营品牌"
-      >No.1188：{{state.userInfo.mainBrand}}
-      </el-descriptions-item>
+      <el-descriptions-item label="店铺名称：">{{userInfo.distributorName}}</el-descriptions-item>
+      <el-descriptions-item label="开店日期：">{{userInfo.openingDate}}</el-descriptions-item>
+      <el-descriptions-item label="联系人：">{{userInfo.contacts}}</el-descriptions-item>
+      <el-descriptions-item label="手机号：">{{userInfo.phone}}</el-descriptions-item>
+      <el-descriptions-item label="主营类目：">No.1188：{{userInfo.mainClass}}</el-descriptions-item>
+      <el-descriptions-item label="主营品牌：">No.1188：{{userInfo.mainBrand}}</el-descriptions-item>
+      <el-descriptions-item label="&nbsp; &nbsp; 邮箱：">{{userInfo.email}}</el-descriptions-item>
+      <el-descriptions-item label="&nbsp; &nbsp; 旺旺："><el-tag size="small">{{userInfo.wang}}</el-tag></el-descriptions-item>
     </el-descriptions>
   </el-card>
 
-  <el-dialog v-model="dialogFormVisible" title="Shipping address" width="50%">
+  <el-dialog v-model="dialog" title="Shipping address" width="50%">
     <el-form  :inline="true"
-              ref="ruleFormRef"
-             :model="ruleForm"
-             status-icon
-             :rules="rules"
+              :model="userForm"
              label-width="80px"
     >
+      <input v-model="userForm.distributorInfoID" hidden />
+
       <el-form-item label="店铺名称:" :label-width="formLabelWidth">
-        <el-input v-model="state.tex" autocomplete="off" />
+        <el-input v-model="userForm.distributorName" autocomplete="off" />
       </el-form-item>
-      <el-form-item label="店铺名称:" :label-width="formLabelWidth">
-        <el-input v-model="state.tex" autocomplete="off" />
+      <el-form-item label="开店日期:" :label-width="formLabelWidth">
+        <el-input type="date" v-model="userForm.openingDate" autocomplete="off" />
       </el-form-item>
-      <el-form-item label="店铺名称:" :label-width="formLabelWidth">
-        <el-input v-model="state.tex" autocomplete="off" />
+      <el-form-item label="联系人:" :label-width="formLabelWidth">
+        <el-input v-model="userForm.contacts" autocomplete="off" />
       </el-form-item>
-      <el-form-item label="店铺名称:" :label-width="formLabelWidth">
-        <el-input v-model="state.tex" autocomplete="off" />
+      <el-form-item label="手机号:" :label-width="formLabelWidth">
+        <el-input v-model="userForm.phone" autocomplete="off" />
       </el-form-item>
-      <el-form-item label="店铺名称:" :label-width="formLabelWidth">
-        <el-input v-model="state.tex" autocomplete="off" />
+      <el-form-item label="邮箱:" :label-width="formLabelWidth">
+        <el-input v-model="userForm.email" autocomplete="off" />
       </el-form-item>
-      <el-form-item label="店铺名称:" :label-width="formLabelWidth">
-        <el-input v-model="state.tex" autocomplete="off" />
+      <el-form-item label="旺旺:" :label-width="formLabelWidth">
+        <el-input v-model="userForm.wang" autocomplete="off" />
       </el-form-item>
 
       <el-form-item label="Zones:" :label-width="formLabelWidth">
-        <el-select v-model="state.tex" placeholder="Please select a zone">
+        <el-select  placeholder="Please select a zone">
           <el-option label="Zone No.1" value="shanghai" />
           <el-option label="Zone No.2" value="beijing" />
         </el-select>
       </el-form-item>
 
       <el-form-item label="Zones:" :label-width="formLabelWidth">
-        <el-select v-model="state.tex" placeholder="Please select a zone">
+        <el-select placeholder="Please select a zone">
           <el-option label="Zone No.1" value="shanghai" />
           <el-option label="Zone No.2" value="beijing" />
         </el-select>
@@ -87,8 +79,8 @@
 
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">Cancel</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">
+        <el-button @click="dialog = false">Cancel</el-button>
+        <el-button type="primary" @click="onSubmit">
           Confirm
         </el-button>
       </span>
@@ -97,33 +89,31 @@
 </template>
 
 <script setup lang="ts">
-import {computed, onMounted, reactive, ref} from 'vue'
+import {onMounted, ref} from 'vue'
+import { selectDis, updateDis } from '../axios/index';
 import { Edit } from '@element-plus/icons-vue'
-import { disCard } from '../axios/index';
 import { useTitle } from '../store/index'
 
-const dialogTableVisible = ref(false)
-const dialogFormVisible = ref(false)
 const size = ref('')
-const state = reactive({
-  userInfo: {},
-  tex: ''
-})
-
-const blockMargin = computed(() => {
-  const marginMap = {
-    large: '32px',
-    default: '28px',
-    small: '24px',
-  }
-  return {
-    marginTop: marginMap[size.value] || marginMap.default,
-  }
-})
-
-onMounted(()=>{
-  disCard().then(res => {
-    state.userInfo = res.data
+const dialog = ref(false)
+const userInfo = ref({})
+const userForm = ref({})
+const onDialog = () => {
+  // selectDis().then(res => {
+  //   userForm.value = res.data
+  // })
+  dialog.value = true
+}
+const onSubmit = () => {
+  updateDis(userForm.value).then(res => {
+    userInfo.value = res.data
+  })
+  dialog.value = false
+}
+onMounted( () => {
+  selectDis().then(res => {
+    userInfo.value = res.data
+    userForm.value = res.data
   })
 })
 </script>

@@ -8,7 +8,6 @@
           <el-radio>Default</el-radio>
           <el-radio label="small">Small</el-radio>
         </el-radio-group>
-<!--        <el-button class="button" text>Operation button</el-button>-->
       </div>
     </template>
     <el-row>
@@ -16,59 +15,102 @@
         <span >Vertical list with border</span>
       </el-col>
       <el-col :span="12" style="text-align: right">
-        <el-button :icon="Edit" >修改信息</el-button>
+        <el-button :icon="Edit" text type="primary" size="large" @click="onDialog">修改信息</el-button>
       </el-col>
     </el-row>
+
     <el-descriptions
-        direction="vertical"
-        :column="2"
+        :column="4"
         :size="size"
-        border
+        label-align="right"
     >
       <!--        title="Vertical list with border"-->
-      <el-descriptions-item label="企业名称">{{state.userInfo.companyName}}</el-descriptions-item>
-      <el-descriptions-item label="企业介绍">{{state.userInfo.companyInfo}}</el-descriptions-item>
-      <el-descriptions-item label="联系人">{{state.userInfo.contacts}}</el-descriptions-item>
-      <el-descriptions-item label="手机号">{{state.userInfo.phone}}</el-descriptions-item>
-      <el-descriptions-item label="邮箱">{{state.userInfo.email}}</el-descriptions-item>
-      <el-descriptions-item label="旺旺">
-        <el-tag size="small">{{state.userInfo.wang}}</el-tag>
-      </el-descriptions-item>
-      <el-descriptions-item label="主营类目"
-      >No.1188：{{state.userInfo.mainClass}}
-      </el-descriptions-item>
-      <el-descriptions-item label="主营品牌"
-      >No.1188：{{state.userInfo.mainBrand}}
-      </el-descriptions-item>
+      <el-descriptions-item label="企业名称：">{{userInfo.companyName}}</el-descriptions-item>
+      <el-descriptions-item label="企业介绍：">{{userInfo.companyInfo}}</el-descriptions-item>
+      <el-descriptions-item label="联系人：">{{userInfo.contacts}}</el-descriptions-item>
+      <el-descriptions-item label="手机号：">{{userInfo.phone}}</el-descriptions-item>
+      <el-descriptions-item label="主营类目：">{{userInfo.mainClass}}</el-descriptions-item>
+      <el-descriptions-item label="主营品牌：">{{userInfo.mainBrand}}</el-descriptions-item>
+      <el-descriptions-item label="&nbsp; &nbsp; 邮箱：">{{userInfo.email}}</el-descriptions-item>
+      <el-descriptions-item label="&nbsp; &nbsp; 旺旺："><el-tag size="small">{{userInfo.wang}}</el-tag></el-descriptions-item>
     </el-descriptions>
   </el-card>
+
+  <el-dialog v-model="dialog" title="Shipping address" width="50%">
+    <el-form  :inline="true"
+              :model="userForm"
+              label-width="80px"
+    >
+      <input v-model="userForm.SupplierInfoID" hidden />
+
+      <el-form-item label="企业名称:" :label-width="formLabelWidth">
+        <el-input v-model="userForm.companyName" autocomplete="off" />
+      </el-form-item>
+      <el-form-item label="企业介绍:" :label-width="formLabelWidth">
+        <el-input v-model="userForm.companyInfo" autocomplete="off" />
+      </el-form-item>
+      <el-form-item label="联系人:" :label-width="formLabelWidth">
+        <el-input v-model="userForm.contacts" autocomplete="off" />
+      </el-form-item>
+      <el-form-item label="手机号:" :label-width="formLabelWidth">
+        <el-input v-model="userForm.phone" autocomplete="off" />
+      </el-form-item>
+      <el-form-item label="邮箱:" :label-width="formLabelWidth">
+        <el-input v-model="userForm.email" autocomplete="off" />
+      </el-form-item>
+      <el-form-item label="旺旺:" :label-width="formLabelWidth">
+        <el-input v-model="userForm.wang" autocomplete="off" />
+      </el-form-item>
+
+      <el-form-item label="Zones:" :label-width="formLabelWidth">
+        <el-select  placeholder="Please select a zone">
+          <el-option label="Zone No.1" value="shanghai" />
+          <el-option label="Zone No.2" value="beijing" />
+        </el-select>
+      </el-form-item>
+
+      <el-form-item label="Zones:" :label-width="formLabelWidth">
+        <el-select placeholder="Please select a zone">
+          <el-option label="Zone No.1" value="shanghai" />
+          <el-option label="Zone No.2" value="beijing" />
+        </el-select>
+      </el-form-item>
+    </el-form>
+
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="dialog = false">Cancel</el-button>
+        <el-button type="primary" @click="onSubmit">
+          Confirm
+        </el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup lang="ts">
-import {computed, onMounted, reactive, ref} from 'vue'
+import {onMounted, ref} from 'vue'
+import {selectSup, updateSup} from '../axios/index';
 import { Edit } from '@element-plus/icons-vue'
-import { supCard } from '../axios/index';
 import { useTitle } from '../store/index'
 
 const size = ref('')
-const state = reactive({
-  userInfo: {}
-})
-
-const blockMargin = computed(() => {
-  const marginMap = {
-    large: '32px',
-    default: '28px',
-    small: '24px',
-  }
-  return {
-    marginTop: marginMap[size.value] || marginMap.default,
-  }
-})
-
-onMounted(()=>{
-  supCard().then(res => {
-      state.userInfo = res.data
+const dialog = ref(false)
+const userInfo = ref({})
+const userForm = ref({})
+const onDialog = () => {
+  dialog.value = true
+}
+const onSubmit = () => {
+  updateSup(userForm.value).then(res => {
+    userInfo.value = res.data
+  })
+  dialog.value = false
+}
+onMounted( ()=>{
+  selectSup().then(res => {
+    userInfo.value = res.data
+    userForm.value = res.data
   })
 })
 </script>
@@ -88,5 +130,12 @@ onMounted(()=>{
 .box-card {
   background: none;
   padding-bottom: 10px;
+}
+
+.el-select {
+  width: 200px;
+}
+.el-input {
+  width: 200px;
 }
 </style>

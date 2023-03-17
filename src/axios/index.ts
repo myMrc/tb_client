@@ -3,7 +3,6 @@ import axios from 'axios'
 import { ElMessage} from 'element-plus'
 import { localGet, localSet} from '../utils/index'
 import { User } from '../model/index'
-// import { watch } from 'vue'
 
 // 请求头，headers 信息
 axios.defaults.headers['X-Requested-With'] = 'XMLHttpRequest'
@@ -26,16 +25,18 @@ axios.interceptors.response.use(res => {
   return res.data
 })
 
-//登录
+//用户
 export const login = (user:User) => {return axios.post(`/api/login?`+qs.stringify(user))}
+export const selectUser = () => {return axios.get(`/api/user`)}
 
-//查询用户信息
-export const userInfo = () => {return axios.get(`/api/user`)}
+//供应商
+export const selectSup = () => {return axios.get(`/api/sup`)}
+export const updateSup = (userForm:object) => {return axios.put(`/api/sup`,qs.stringify(userForm))}
+export const selectSupProLine = () => {return axios.get(`/api/supProLine`)}
+export const selectSupPro = () => {return axios.get(`/api/supPro`)}
 
-//查询供应商信息
-export const supCard = () => {return axios.get(`/api/sup`)}
-
-//查询分销商信息
-export const disCard = () => {return axios.get(`/api/dis`)}
+//分销商
+export const selectDis = () => {return axios.get(`/api/dis`)}
+export const updateDis = (userForm:object) => {return axios.put(`/api/dis`,qs.stringify(userForm))}
 
 export default axios

@@ -12,18 +12,18 @@
     </template>
     <el-row>
       <el-col :span="4" style="text-align: left">
-        <el-input v-model="state.seachTex" placeholder="模糊搜索" />
+        <el-input v-model="seachTex" placeholder="模糊搜索" />
       </el-col>
       <el-col :span="20" style="text-align: right">
-        <el-button :icon="Plus" >添加数据</el-button>
+        <el-button :icon="Plus" text type="primary" size="large">添加数据</el-button>
       </el-col>
     </el-row>
     <el-descriptions>
       <el-descriptions-item>
         <el-table :size="size"
                   :cell-style="{ textAlign: 'center' }"
-                  :header-cell-style="{ 'text-align': 'center' }"
-                  :data="state.tableData" style="width: 100%"
+                  :header-cell-style="{ 'text-align': 'center','background': 'none' }"
+                  :data="tableData" style="width: 100%"
         >
           <el-table-column label="num" type="index" width="80" />
           <el-table-column prop="date" label="Date" />
@@ -51,18 +51,23 @@
         </el-table>
       </el-descriptions-item>
     </el-descriptions>
+    <el-row>
+      <el-col :span="17"></el-col>
+      <el-col :span="7">
+        <el-pagination layout="prev, pager, next" :total="1000" />
+      </el-col>
+    </el-row>
   </el-card>
 </template>
 
 <script setup lang="ts">
-import {computed, onMounted, reactive, ref} from 'vue'
+import { onMounted, ref} from 'vue'
 import { Plus } from '@element-plus/icons-vue'
 import { useTitle } from '../store/index'
 
 const size = ref('')
-const state = reactive({
-  seachTex: '',
-  tableData: [
+const seachTex = ref('')
+const tableData = ref([
     {
       date: '2016-05-03',
       name: 'Tom',
@@ -83,30 +88,43 @@ const state = reactive({
       name: 'Tom',
       address: 'No. 189, Grove St, Los Angeles',
     },
-  ]
-})
-
-const blockMargin = computed(() => {
-  const marginMap = {
-    large: '32px',
-    default: '28px',
-    small: '24px',
-  }
-  return {
-    marginTop: marginMap[size.value] || marginMap.default,
-  }
-})
-
+    {
+      date: '2016-05-01',
+      name: 'Tom',
+      address: 'No. 189, Grove St, Los Angeles',
+    },
+    {
+      date: '2016-05-01',
+      name: 'Tom',
+      address: 'No. 189, Grove St, Los Angeles',
+    },
+    {
+      date: '2016-05-01',
+      name: 'Tom',
+      address: 'No. 189, Grove St, Los Angeles',
+    },
+    {
+      date: '2016-05-01',
+      name: 'Tom',
+      address: 'No. 189, Grove St, Los Angeles',
+    },
+    {
+      date: '2016-05-01',
+      name: 'Tom',
+      address: 'No. 189, Grove St, Los Angeles',
+    },
+    {
+      date: '2016-05-01',
+      name: 'Tom',
+      address: 'No. 189, Grove St, Los Angeles',
+    },
+])
 onMounted(()=>{
 
 })
 </script>
 
 <style scoped>
-.el-descriptions {
-  margin-top: 20px;
-}
-
 .card-header {
   display: flex;
   height: 24px;

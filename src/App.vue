@@ -11,7 +11,7 @@
         <h3 style="font-family: 小米兰亭">企业网络分销平台</h3>
         <el-dropdown @command="handleCommand">
               <span class="el-dropdown-link">
-                  <Avatar width="35"/>
+                  <Avatar width="30"/>
                    myAccount
               </span>
           <template #dropdown>
@@ -31,6 +31,8 @@
           <el-menu
               class="el-menu-vertical-demo"
               :router="true"
+              default-openeds=''
+              unique-opened="true"
               :default-openeds="state.defaultOpen"
           >   <!-- menu菜单 -->
             <el-sub-menu v-for="menu in saveRouter" :index="menu.index">
@@ -45,7 +47,7 @@
           </el-menu>
         </el-aside>
         <!-- main页面 -->
-        <el-main>
+        <el-main style="padding: 25px">
           <router-view />
         </el-main>
       </el-container>
@@ -59,7 +61,7 @@ import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { saveRouter } from './router/index'
 import { localGet, localRemove } from './utils/index'
-import { userInfo } from "./axios";
+import { selectUser } from "./axios";
 import { Index } from './components/index'
 import { useTitle } from './store/index'
 
@@ -73,7 +75,7 @@ const state = reactive({
 
 onMounted(()=>{
   if(saveRouter.value.length >0 ){
-    userInfo().then(res => {
+    selectUser().then(res => {
       state.userInfo = res.data
     })
   }
@@ -83,8 +85,8 @@ onMounted(()=>{
 router.beforeEach((to, from, next) => {
   to.path == '/login'? next() : !localGet('token')? next(to.path ='/login' ) : next()
   state.showMenu = !noMenu.includes(to.path)
-  document.title = to.name
-  useTitle().text = to.name
+  document.title = to.name as keyof typeof state
+  useTitle().text = to.name as keyof typeof state
   // document.title = to.name as keyof typeof state
 })
 
