@@ -1,20 +1,21 @@
-// 用户
-export interface User{
-  username:string,
-  password:string
-}
 // 路由
-export interface Router{
+export interface Menu{
   index:string,
   icon :string,
   title:string,
-  chileth: Routers[]
+  path?:string,
+  chileth?: Menus[]
 }
-// 子路由
-export interface Routers{
+// 子菜单
+export interface Menus{
+  icon:string,
+  name:string,
+  path?:string
+}
+// 路由
+export interface Router{
   path:string,
   name:string,
-  icon:string,
   component:string
 }
 //图标

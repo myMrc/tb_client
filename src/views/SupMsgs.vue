@@ -22,8 +22,8 @@
       <el-descriptions-item>
         <el-table :size="size"
                   :cell-style="{ textAlign: 'center' }"
-                  :header-cell-style="{ 'text-align': 'center','background': 'none' }"
-                  :data="tableData" style="width: 100%"
+                  :header-cell-style="{ 'text-align': 'center','background': '#18222c' }"
+                  :data="tableData"
         >
           <el-table-column label="num" type="index" width="80" />
           <el-table-column prop="date" label="Date" />
@@ -125,6 +125,7 @@ onMounted(()=>{
 </script>
 
 <style scoped>
+
 .card-header {
   display: flex;
   height: 24px;

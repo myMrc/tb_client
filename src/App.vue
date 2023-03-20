@@ -3,22 +3,27 @@
     <el-container style="height: 100vh;">
 
       <!-- head头部 -->
-      <el-header class="head" v-show="state.showMenu">
+      <el-header class="head" v-show="showHead">
         <div style="display: flex;justify-content: center">
           <img src="./assets/vue.svg" width="30" />
-          <h5 style="margin: 20px 5px;" @click="myMain"><i>HELLO WORLD</i></h5>
+          <h5 style="margin: 20px 5px;"><i>HELLO WORLD</i></h5>
         </div>
-        <h3 style="font-family: 小米兰亭">企业网络分销平台</h3>
+        <p style="font-family: 华文新魏;font-size: 30px;margin: 10px">企业网络分销平台</p>
         <el-dropdown @command="handleCommand">
-              <span class="el-dropdown-link">
-                  <Avatar width="30"/>
-                   myAccount
+              <span class="el-dropdown-link" style="font-size: 16px !important;">
+                  <Avatar width="35" style="margin-right: 5px"/>
+                   <i>myAccount</i>
               </span>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item :command="state.userInfo.usersID">userId：{{state.userInfo.usersID}}</el-dropdown-item>
-              <el-dropdown-item :command="state.userInfo.account">name：{{state.userInfo.account}}</el-dropdown-item>
-              <el-dropdown-item divided command="Out">退出登录</el-dropdown-item>
+              <el-dropdown-item >user：{{userInfo.userName}}</el-dropdown-item>
+              <el-dropdown-item v-if="userInfo.reloId == 1">relo ：供应商</el-dropdown-item>
+              <el-dropdown-item v-else>relo ：新用户</el-dropdown-item>
+              <el-dropdown-item v-if="userInfo.reloId == 2">relo ：分销商</el-dropdown-item>
+              <div style="display: flex">
+                <el-dropdown-item divided command="Out">退出</el-dropdown-item>
+                <el-dropdown-item divided command="Del">注销</el-dropdown-item>
+              </div>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -27,23 +32,22 @@
       <!-- right视图 -->
       <el-container>
         <!-- left导航 -->
-        <el-aside class="left" v-show="state.showMenu">
-          <el-menu
-              class="el-menu-vertical-demo"
-              :router="true"
-              default-openeds=''
-              unique-opened="true"
-              :default-openeds="state.defaultOpen"
-          >   <!-- menu菜单 -->
-            <el-sub-menu v-for="menu in saveRouter" :index="menu.index">
-              <template #title>
-                <Index class="icon" :icon="menu.icon"></Index>
-                <span>{{ menu.title }}</span>
-              </template>
-              <el-menu-item v-for="menus in menu.chileth" :index="menus.path">
-                <Index class="icon" :icon="menus.icon"></Index>{{ menus.name }}
+        <el-aside class="left" v-show="showMenu">
+          <el-menu router="true">
+            <template v-for="menu in saveMenu">
+              <el-sub-menu v-if="menu.chileth" :index="menu.index">
+                <template #title>
+                  <Index class="icon" :icon="menu.icon"></Index>
+                  <span>{{ menu.title }}</span>
+                </template>
+                <el-menu-item v-for="menus in menu.chileth" :index="menus.path">
+                  <Index class="icon" :icon="menus.icon"></Index>{{ menus.name }}
+                </el-menu-item>
+              </el-sub-menu>
+              <el-menu-item v-else :index="menu.index">
+                <Index class="icon" :icon="menu.icon"></Index>{{ menu.title }}
               </el-menu-item>
-            </el-sub-menu>
+            </template>
           </el-menu>
         </el-aside>
         <!-- main页面 -->
@@ -56,54 +60,50 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, reactive} from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { ElMessage } from 'element-plus'
-import { saveRouter } from './router/index'
-import { localGet, localRemove } from './utils/index'
-import { selectUser } from "./axios";
-import { Index } from './components/index'
+import { addRouter, resetRouter, saveMenu, saveRouter} from './router/index'
+import { allRouter, localGet, localRemove, resMenu, resRouter, supMenu, supRouter} from './utils/index'
+import { selectUser, deleteUser } from "./axios/index";
 import { useTitle } from './store/index'
+import { ElMessage } from 'element-plus'
+import { Index } from './components/index'
 
 const noMenu = ['/login']
 const router = useRouter()
-const state = reactive({
-  userInfo: {},
-  showMenu: true,
-  defaultOpen: ['1', '2', '3', '4']
-})
+const userInfo = ref({})
+const showMenu = ref(true)
+const showHead = ref(true)
 
 onMounted(()=>{
-  if(saveRouter.value.length >0 ){
+    if(localGet('token'))
     selectUser().then(res => {
-      state.userInfo = res.data
+      userInfo.value = res.data
     })
-  }
 })
 
 //路由守卫
 router.beforeEach((to, from, next) => {
   to.path == '/login'? next() : !localGet('token')? next(to.path ='/login' ) : next()
-  state.showMenu = !noMenu.includes(to.path)
-  document.title = to.name as keyof typeof state
-  useTitle().text = to.name as keyof typeof state
-  // document.title = to.name as keyof typeof state
+  useTitle().text = to.name as string
+  document.title = to.name as string
+  showMenu.value = !noMenu.includes(to.path)
+  showHead.value = !noMenu.includes(to.path)
+  if(saveMenu.value.length == 0){
+    showMenu.value = false
+  }
 })
 
-//退出登录
+//退出-注销
 const handleCommand = (command: string | number | object) => {
   if(command == "Out"){
     localRemove('token')
-    saveRouter.value = []
-    router.push("/login")
-  }else{
-    ElMessage(`click on item ${command}`)
   }
-}
-
-//首页跳转
-const myMain = () => {
-  router.push("/")
+  if (command == "Del"){
+    deleteUser()
+    localRemove('token')
+  }
+  window.location.href = "/"
 }
 </script>
 

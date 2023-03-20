@@ -1,17 +1,12 @@
 import { createRouter,createWebHashHistory } from "vue-router";
 import { useStorage } from '@vueuse/core'
-import { Router } from "../model/index";
+import { Menu, Router} from "../model/index";
 
 //定义路由
 const clientRouters = [
   {
     path: '/',
     redirect: '/MyMain'
-  },
-  {
-    path: '/MyMain',
-    name: '首页',
-    component: () => import(/* webpackChunkName: "introduce" */ '../views/MyMain.vue')
   },
   {
     path: '/Login',
@@ -36,17 +31,16 @@ export const resetRouter = () =>{
 //添加路由
 export const addRouter = (saveRouterValue:Router[]) => {
   for (const r of saveRouterValue) {
-    for (const t of r.chileth) {
-        router.addRoute({
-          name:t.name,
-          path:t.path,
-          component: () => import(t.component)
-        })
-    }
+      router.addRoute({
+        name:r.name,
+        path:r.path,
+        component: () => import(r.component)
+      })
   }
 }
 
 //存储路由
+export const saveMenu = useStorage<Menu[]>('saveMenu',[])
 export const saveRouter = useStorage<Router[]>('saveRouter',[])
 
 addRouter(saveRouter.value)

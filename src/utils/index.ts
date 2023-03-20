@@ -1,4 +1,4 @@
-import {Router} from "../model/index"
+import { Router, Menu} from "../model/index"
 
 export const localGet = (key:string) => {
   const value = window.localStorage.getItem(key)
@@ -19,6 +19,54 @@ export const localRemove = (key:string) => {
 
 export const supRouter:Router[] = [
   {
+    path: "/MyMain",
+    name: "首页",
+    component: "../views/SupMain.vue"
+  },
+  {
+    path: "/SupCard",
+    name: "我的名片",
+    component: '../views/SupCard.vue',
+  },
+  {
+    path: "/SupMsgs",
+    name: "我的消息",
+    component: '../views/SupMsgs.vue'
+  },
+  {
+    path: "/SupProductLine",
+    name: "我的产品线",
+    component:  '../views/SupProductLine.vue'
+  },
+  {
+    path: "/SupProduct",
+    name: "我的产品",
+    component: '../views/SupProduct.vue'
+  },
+  {
+    path: "/SupRecruitmentBook",
+    name: "我的招募书",
+    component: '../views/SupRecruitmentBook.vue'
+  },
+  {
+    path: "/SupDistributor",
+    name: "我的分销商",
+    component: '../views/SupDistributor.vue'
+  },
+  {
+    path: "/SupPurchaseOrder",
+    name: "我的采购单",
+    component: '../views/SupPurchaseOrder.vue'
+  }
+]
+
+export const supMenu:Menu[] = [
+  {
+    index: "/MyMain",
+    title: "首页",
+    icon: "ScaleToOriginal",
+  },
+  {
     index: "1",
     icon: "ScaleToOriginal",
     title: "基本设置",
@@ -27,13 +75,11 @@ export const supRouter:Router[] = [
         path: "/SupCard",
         name: "我的名片",
         icon: "Postcard",
-        component: '../views/SupCard.vue',
       },
       {
         path: "/SupMsgs",
         name: "我的消息",
         icon: "Comment",
-        component: '../views/SupMsgs.vue'
       }
     ]
   },
@@ -46,13 +92,11 @@ export const supRouter:Router[] = [
         path: "/SupProductLine",
         name: "我的产品线",
         icon: "DataLine",
-        component:  '../views/SupProductLine.vue'
       },
       {
         path: "/SupProduct",
         name: "我的产品",
         icon: "TrendCharts",
-        component: '../views/SupProduct.vue'
       }
     ]
   },
@@ -65,87 +109,11 @@ export const supRouter:Router[] = [
         path: "/SupRecruitmentBook",
         name: "我的招募书",
         icon: "Notebook",
-        component: '../views/SupRecruitmentBook.vue'
       },
       {
         path: "/SupDistributor",
         name: "我的分销商",
         icon: "Coin",
-        component: '../views/SupDistributor.vue'
-      }
-    ]
-  },
-  {
-    index: "4",
-    icon: "DocumentCopy",
-    title: "采购单管理",
-    chileth: [
-      {
-        path: "/SupPurchaseOrder",
-        name: "我的采购单",
-        icon: "CreditCard",
-        component: '../views/SupPurchaseOrder.vue'
-      }
-    ]
-  }
-]
-
-export const disRouter:Router[] = [
-  {
-    index: "1",
-    icon: "ScaleToOriginal",
-    title: "基本设置",
-    chileth: [
-      {
-        path: "/DisCard",
-        name: "我的名片",
-        icon: "Postcard",
-        component: '../views/DisCard.vue',
-      },
-      {
-        path: "/DisMsgs",
-        name: "我的消息",
-        icon: "Comment",
-        component: '../views/DisMsgs.vue'
-      }
-    ]
-  },
-  {
-    index: "2",
-    icon: "Memo",
-    title: "产品管理",
-    chileth: [
-      {
-        path: "/DisProducts",
-        name: "授权产品",
-        icon: "DataLine",
-        component:  '../views/DisProducts.vue'
-      }
-    ]
-  },
-  {
-    index: "3",
-    icon: "SupDistributor",
-    title: "商品管理",
-    chileth: [
-      {
-        path: "/DisGoods",
-        name: "分销商品",
-        icon: "TrendCharts",
-        component: '../views/DisGoods.vue'
-      }
-    ]
-  },
-  {
-    index: "4",
-    icon: "Avatar",
-    title: "供应商管理",
-    chileth: [
-      {
-        path: "/DisApply",
-        name: "申请加盟",
-        icon: "SupDistributor",
-        component: '../views/DisApply.vue'
       }
     ]
   },
@@ -155,11 +123,129 @@ export const disRouter:Router[] = [
     title: "采购单管理",
     chileth: [
       {
-        path: "/DisPurchaseOrder",
+        path: "/SupPurchaseOrder",
         name: "我的采购单",
         icon: "CreditCard",
-        component: '../views/DisPurchaseOrder.vue'
       }
     ]
+  }
+]
+
+export const resRouter:Router[] = [
+  {
+    path: "/MyMain",
+    name: "首页",
+    component: "../views/DisMain.vue",
+  },
+  {
+    path: "/DisCard",
+    name: "我的名片",
+    component: '../views/DisCard.vue',
+  },
+  {
+    path: "/DisMsgs",
+    name: "我的消息",
+    component: '../views/DisMsgs.vue'
+  },
+  {
+    path: "/DisProducts",
+    name: "授权产品",
+    component:  '../views/DisProducts.vue'
+  },
+  {
+    path: "/DisGoods",
+    name: "分销商品",
+    component: '../views/DisGoods.vue'
+  },
+  {
+    path: "/DisApply",
+    name: "申请加盟",
+    component: '../views/DisApply.vue'
+  },
+  {
+    path: "/DisPurchaseOrder",
+    name: "我的采购单",
+    component: '../views/DisPurchaseOrder.vue'
+  }
+]
+
+export const resMenu:Menu[] = [
+  {
+    index: "/MyMain",
+    title: "首页",
+    icon: "ScaleToOriginal",
+  },
+  {
+    index: "1",
+    title: "基本设置",
+    icon: "ScaleToOriginal",
+    chileth: [
+      {
+        name: "我的名片",
+        path: "/DisCard",
+        icon: "Postcard",
+      },
+      {
+        name: "我的消息",
+        path: "/DisMsgs",
+        icon: "Comment",
+      }
+    ]
+  },
+  {
+    index: "2",
+    title: "产品管理",
+    icon: "Memo",
+    chileth: [
+      {
+        name: "授权产品",
+        path: "/DisProducts",
+        icon: "DataLine",
+      }
+    ]
+  },
+  {
+    index: "3",
+    title: "商品管理",
+    icon: "Memo",
+    chileth: [
+      {
+        name: "分销商品",
+        path: "/DisGoods",
+        icon: "TrendCharts",
+      }
+    ]
+  },
+  {
+    index: "4",
+    title: "供应商管理",
+    icon: "Avatar",
+    chileth: [
+      {
+        name: "申请加盟",
+        path: "/DisApply",
+        icon: "SupDistributor",
+      }
+    ]
+  },
+  {
+    index: "5",
+    title: "采购单管理",
+    icon: "DocumentCopy",
+    chileth: [
+      {
+        name: "我的采购单",
+        path: "/DisPurchaseOrder",
+        icon: "CreditCard",
+      }
+    ]
+  }
+]
+
+export const allRouter:Router[] = [
+  {
+    path: "/MyMain",
+    name: "首页",
+    component: "../views/MyMain.vue",
   }
 ]
