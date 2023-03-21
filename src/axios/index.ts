@@ -2,25 +2,25 @@ import qs from 'qs'
 import axios from 'axios'
 import { ElMessage} from 'element-plus'
 import { localGet} from '../utils/index'
+// res.headers.post['Content-Type'] = 'application/json'
 
-// 请求头，headers 信息
-axios.defaults.headers['X-Requested-With'] = 'XMLHttpRequest'
-axios.defaults.headers['authorization'] = localGet('token') || ''
-// 默认 post 请求，使用 application/json 形式
-axios.defaults.headers.post['Content-Type'] = 'application/json'
+//请求拦截器
+axios.interceptors.request.use(res => {
+  res.headers['X-Requested-With'] = 'XMLHttpRequest'
+  res.headers['authorization'] = localGet('token')
+  return res
+},err => {
+  ElMessage.error('请求Exception！')
+  return Promise.reject(err)
+})
+
 // 响应拦截器。
 axios.interceptors.response.use(res => {
-  if (typeof res.data != 'object') {
-    ElMessage.error('Exception！')
-    return Promise.reject(res)
-  }
-  if (res.data.code != 1) {
-    if(res.data.msg) ElMessage.error(res.data.msg)
-    return Promise.reject(res.data)
-  }else{
-    if(res.data.msg) ElMessage.success(res.data.msg)
-  }
+  res.data.code == 1? ElMessage.success(res.data.msg) : ElMessage.error(res.data.msg)
   return res.data
+},err => {
+  ElMessage.error('响应Exception！')
+  return Promise.reject(err)
 })
 
 //用户

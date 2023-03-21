@@ -82,14 +82,20 @@ import {selectSupProLine} from '../axios/index'
 import { Plus } from '@element-plus/icons-vue'
 import { useTitle } from '../store/index'
 
-const size = ref()
-const seachTex = ref()
-const tableData = ref()
-const userForm = ref({})
-const dialog = ref(false)
+const size = ref()      //尺寸
+const seachTex = ref()  //搜索框
+const tableData = ref() //表格数据
+const userForm = ref({})  //表单信息
+const dialog = ref(false) //对话框
+//打开对话框
+const onDialog = () => {
+  dialog.value = false
+}
+//提交表单
 const onSubmit = () => {
   dialog.value = false
 }
+//页面加载
 onMounted(()=>{
   selectSupProLine().then(res => {
     tableData.value = res.data

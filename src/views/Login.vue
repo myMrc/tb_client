@@ -32,6 +32,7 @@
   import { login, register } from '../axios/index'
   import router, { resetRouter, addRouter, saveRouter, saveMenu} from '../router/index'
   import { localSet, supRouter, resRouter, supMenu, resMenu, allRouter } from '../utils/index'
+  import { useUserInfo } from '../store/index'
 
   const user = ref({})
   //模态框
@@ -43,23 +44,25 @@
     return `--el-box-shadow${type ? '-' : ''}${type}`
   }
   //登录
-  const loginFun = ()=>{
-    login(user.value).then(res => {
-      localSet('token', res.data)
-      resetRouter()
-      let id = JSON.parse(atob(res.data.split(".")[1])).user.reloId;
-      if(id == 1){
+  const loginFun = async () =>{
+    await login(user.value).then(res => {
+      localSet('token', res.data) //保存token令牌
+      resetRouter() //移除路由
+      let user = JSON.parse(atob(res.data.split(".")[1])).user; //从token获取用户信息
+      if(user.reloId == 1){
         saveRouter.value = supRouter
         saveMenu.value = supMenu
-      }else if(id == 2){
+      }else if(user.reloId == 2){
         saveRouter.value = resRouter
         saveMenu.value = resMenu
       }else {
         saveRouter.value = allRouter
         saveMenu.value = []
       }
-      addRouter(saveRouter.value)
-      router.push("/")
+      useUserInfo().user = user.userName  //用户名称
+      useUserInfo().relo = user.reloId   //用户角色
+      addRouter(saveRouter.value)       //添加路由
+      router.push("/")                 //跳转页面
     })
   }
   //注册

@@ -129,6 +129,8 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { updataUser, addSup, addRes } from '../axios/index'
+import { resetRouter, addRouter, saveRouter, saveMenu} from '../router/index'
+import { supRouter, resRouter, supMenu, resMenu } from '../utils/index'
 import router from "../router";
 
 const supForm = ref({})
@@ -137,19 +139,25 @@ const supDialog = ref(false)
 const resDialog = ref(false)
 const currentDate = ref(new Date())
 
-const supSubmit = () => {
-  addSup(supForm.value).then(res => {
-    updataUser(1)
-    supDialog.value = false
-    router.push("/")
-  })
+const supSubmit = async () => {
+  await addSup(supForm.value)
+  await updataUser(1)
+  resetRouter()
+  saveRouter.value = supRouter
+  saveMenu.value = supMenu
+  addRouter(saveRouter.value)
+  router.push("/")
+  supDialog.value = false
 }
-const resSubmit = () => {
-  addRes(resForm.value).then(res => {
-    updataUser(2)
-    supDialog.value = false
-    router.push("/")
-  })
+const resSubmit = async () => {
+  await addRes(resForm.value)
+  await updataUser(2)
+  resetRouter()
+  saveRouter.value = resRouter
+  saveMenu.value = resMenu
+  addRouter(saveRouter.value)
+  router.push("/")
+  resDialog.value = false
 }
 </script>
 <style>

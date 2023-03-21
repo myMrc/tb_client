@@ -16,12 +16,13 @@
               </span>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item >user：{{userInfo.userName}}</el-dropdown-item>
-              <el-dropdown-item v-if="userInfo.reloId == 1">relo ：供应商</el-dropdown-item>
-              <el-dropdown-item v-else>relo ：新用户</el-dropdown-item>
-              <el-dropdown-item v-if="userInfo.reloId == 2">relo ：分销商</el-dropdown-item>
+              <el-dropdown-item >用户 ： {{useUserInfo().user}}</el-dropdown-item>
+              <el-dropdown-item v-if="useUserInfo().relo == 1">角色 ： 供应商</el-dropdown-item>
+              <el-dropdown-item v-else-if="useUserInfo().relo == 2">角色 ： 分销商</el-dropdown-item>
+              <el-dropdown-item v-else>角色 ： 新用户</el-dropdown-item>
               <div style="display: flex">
                 <el-dropdown-item divided command="Out">退出</el-dropdown-item>
+                <span style="margin-top: 6px">|</span>
                 <el-dropdown-item divided command="Del">注销</el-dropdown-item>
               </div>
             </el-dropdown-menu>
@@ -60,35 +61,26 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { addRouter, resetRouter, saveMenu, saveRouter} from './router/index'
-import { allRouter, localGet, localRemove, resMenu, resRouter, supMenu, supRouter} from './utils/index'
-import { selectUser, deleteUser } from "./axios/index";
+import { ref } from 'vue'
+import router, { saveMenu } from './router/index'
+import { localGet, localRemove} from './utils/index'
+import { deleteUser } from "./axios/index";
 import { useTitle } from './store/index'
 import { ElMessage } from 'element-plus'
 import { Index } from './components/index'
+import { useUserInfo } from './store/index'
 
 const noMenu = ['/login']
-const router = useRouter()
-const userInfo = ref({})
 const showMenu = ref(true)
 const showHead = ref(true)
 
-onMounted(()=>{
-    if(localGet('token'))
-    selectUser().then(res => {
-      userInfo.value = res.data
-    })
-})
-
-//路由守卫
+//路由
 router.beforeEach((to, from, next) => {
   to.path == '/login'? next() : !localGet('token')? next(to.path ='/login' ) : next()
-  useTitle().text = to.name as string
-  document.title = to.name as string
-  showMenu.value = !noMenu.includes(to.path)
-  showHead.value = !noMenu.includes(to.path)
+  useTitle().text = to.name as string //卡片标题
+  document.title = to.name as string  //文档标题
+  showMenu.value = !noMenu.includes(to.path)  //菜单显示
+  showHead.value = !noMenu.includes(to.path)  //顶部显示
   if(saveMenu.value.length == 0){
     showMenu.value = false
   }
@@ -98,12 +90,13 @@ router.beforeEach((to, from, next) => {
 const handleCommand = (command: string | number | object) => {
   if(command == "Out"){
     localRemove('token')
+    router.push("/login")
   }
   if (command == "Del"){
     deleteUser()
     localRemove('token')
+    router.push("/login")
   }
-  window.location.href = "/"
 }
 </script>
 

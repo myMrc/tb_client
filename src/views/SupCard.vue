@@ -24,15 +24,14 @@
         :size="size"
         label-align="right"
     >
-      <!--        title="Vertical list with border"-->
-      <el-descriptions-item label="企业名称：">{{userInfo.companyName}}</el-descriptions-item>
-      <el-descriptions-item label="企业介绍：">{{userInfo.companyInfo}}</el-descriptions-item>
-      <el-descriptions-item label="联系人：">{{userInfo.contacts}}</el-descriptions-item>
-      <el-descriptions-item label="手机号：">{{userInfo.phone}}</el-descriptions-item>
-      <el-descriptions-item label="主营类目：">{{userInfo.mainClass}}</el-descriptions-item>
-      <el-descriptions-item label="主营品牌：">{{userInfo.mainBrand}}</el-descriptions-item>
-      <el-descriptions-item label="&nbsp; &nbsp; 邮箱：">{{userInfo.email}}</el-descriptions-item>
-      <el-descriptions-item label="&nbsp; &nbsp; 旺旺："><el-tag size="small">{{userInfo.wang}}</el-tag></el-descriptions-item>
+      <el-descriptions-item label="企业名称 ：">{{userInfo.companyName}}</el-descriptions-item>
+      <el-descriptions-item label="企业介绍 ：">{{userInfo.companyInfo}}</el-descriptions-item>
+      <el-descriptions-item label="联系人 ：">{{userInfo.supplierName}}</el-descriptions-item>
+      <el-descriptions-item label="手机号 ：">{{userInfo.phone}}</el-descriptions-item>
+      <el-descriptions-item label="主营类目 ：">{{userInfo.mainClass}}</el-descriptions-item>
+      <el-descriptions-item label="主营品牌 ：">{{userInfo.mainBrand}}</el-descriptions-item>
+      <el-descriptions-item label="&nbsp; &nbsp;邮箱 ：">{{userInfo.email}}</el-descriptions-item>
+      <el-descriptions-item label="&nbsp; &nbsp;旺旺 ："><el-tag size="small">{{userInfo.wang}}</el-tag></el-descriptions-item>
     </el-descriptions>
   </el-card>
 
@@ -41,7 +40,7 @@
               :model="userForm"
               label-width="80px"
     >
-      <input v-model="userForm.SupplierInfoID" hidden />
+<!--      <input v-model="userForm.supplierId" />-->
 
       <el-form-item label="企业名称:" :label-width="formLabelWidth">
         <el-input v-model="userForm.companyName" autocomplete="off" />
@@ -50,7 +49,7 @@
         <el-input v-model="userForm.companyInfo" autocomplete="off" />
       </el-form-item>
       <el-form-item label="联系人:" :label-width="formLabelWidth">
-        <el-input v-model="userForm.contacts" autocomplete="off" />
+        <el-input v-model="userForm.supplierName" autocomplete="off" />
       </el-form-item>
       <el-form-item label="手机号:" :label-width="formLabelWidth">
         <el-input v-model="userForm.phone" autocomplete="off" />
@@ -89,28 +88,34 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted, ref} from 'vue'
-import {selectSup, updateSup} from '../axios/index';
+import { onMounted, ref} from 'vue'
+import { selectSup, updateSup} from '../axios/index';
 import { Edit } from '@element-plus/icons-vue'
 import { useTitle } from '../store/index'
 
-const size = ref('')
-const dialog = ref(false)
-const userInfo = ref({})
-const userForm = ref({})
+const size = ref('')      //尺寸
+const dialog = ref(false) //对话框
+const userInfo = ref({})  //用户信息
+const userForm = ref({})  //表单信息
+//打开对话框
 const onDialog = () => {
-  dialog.value = true
-}
-const onSubmit = () => {
-  updateSup(userForm.value).then(res => {
-    userInfo.value = res.data
+  selectSup().then(res => {
+    userForm.value = res.data
+    dialog.value = true
   })
-  dialog.value = false
 }
-onMounted( ()=>{
+//提交表单
+const onSubmit = async () => {
+  await updateSup(userForm.value)
+  await selectSup().then(res => {
+    userInfo.value = res.data
+    dialog.value = false
+  })
+}
+//页面加载
+onMounted( () => {
   selectSup().then(res => {
     userInfo.value = res.data
-    userForm.value = res.data
   })
 })
 </script>
