@@ -1,4 +1,5 @@
 import { Router, Menu} from "../model/index"
+import {AxiosResponse} from "axios";
 
 export const localGet = (key:string) => {
   const value = window.localStorage.getItem(key)
@@ -9,7 +10,7 @@ export const localGet = (key:string) => {
   }
 }
 
-export const localSet = (key:string, value:string) => {
+export const localSet = (key: string, value: AxiosResponse<any>) => {
   window.localStorage.setItem(key, JSON.stringify(value))
 }
 

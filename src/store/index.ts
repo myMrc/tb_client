@@ -5,9 +5,3 @@ export const useTitle = defineStore('title',{
         return { text: 'tex' }
     }
 })
-
-export const useUserInfo = defineStore('userInfo',{
-    state: () => {
-        return { user: 'username', relo: 'reloname' }
-    }
-})

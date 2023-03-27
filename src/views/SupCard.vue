@@ -40,7 +40,8 @@
               :model="userForm"
               label-width="80px"
     >
-<!--      <input v-model="userForm.supplierId" />-->
+      <input v-model="userForm.userId" hidden/>
+      <input v-model="userForm.supplierId" hidden/>
 
       <el-form-item label="企业名称:" :label-width="formLabelWidth">
         <el-input v-model="userForm.companyName" autocomplete="off" />
@@ -98,25 +99,19 @@ const dialog = ref(false) //对话框
 const userInfo = ref({})  //用户信息
 const userForm = ref({})  //表单信息
 //打开对话框
-const onDialog = () => {
-  selectSup().then(res => {
-    userForm.value = res.data
-    dialog.value = true
-  })
+const onDialog = async () => {
+  userForm.value = await selectSup()
+  dialog.value = true
 }
 //提交表单
 const onSubmit = async () => {
-  await updateSup(userForm.value)
-  await selectSup().then(res => {
-    userInfo.value = res.data
-    dialog.value = false
-  })
+  userInfo.value = await updateSup(userForm.value)
+  userInfo.value = await selectSup()
+  dialog.value = false
 }
 //页面加载
-onMounted( () => {
-  selectSup().then(res => {
-    userInfo.value = res.data
-  })
+onMounted( async () => {
+  userInfo.value = await selectSup()
 })
 </script>
 

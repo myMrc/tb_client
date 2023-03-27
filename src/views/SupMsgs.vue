@@ -25,27 +25,15 @@
                   :header-cell-style="{ 'text-align': 'center','background': '#18222c' }"
                   :data="tableData"
         >
-          <el-table-column label="num" type="index" width="80" />
+          <el-table-column label="num" type="index" min-width="30" />
           <el-table-column prop="date" label="Date" />
           <el-table-column prop="name" label="Name" />
           <el-table-column prop="name" label="Name" />
-          <el-table-column prop="address" label="Address" width="500" />
-          <el-table-column label="操作" width="120">
+          <el-table-column prop="address" label="Address" min-width="200" />
+          <el-table-column label="操作" align="right" width="120">
             <template #default="scope">
-              <el-button
-                  link
-                  type="primary"
-                  size="small"
-                  @click.prevent="deleteRow(scope.$index)"
-              >Edit
-              </el-button>
-              <el-button
-                  link
-                  type="primary"
-                  size="small"
-                  @click.prevent="deleteRow(scope.$index)"
-              >Remove
-              </el-button>
+              <el-button link type="primary" size="small" @click.prevent="updateRow(scope.$index)">Edit</el-button>
+              <el-button link type="primary" size="small" @click.prevent="deleteRow(scope.$index)">Remove</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -119,9 +107,18 @@ const tableData = ref([
     address: 'No. 189, Grove St, Los Angeles',
   },
 ])
-onMounted(()=>{
 
-})
+const updateRow = (index: number) => {
+  console.log(index)
+}
+
+const deleteRow = (index: number) => {
+  console.log(index)
+}
+
+// onMounted(()=>{
+//
+// })
 </script>
 
 <style scoped>

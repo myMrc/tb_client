@@ -39,9 +39,9 @@ export const addRouter = (saveRouterValue:Router[]) => {
   }
 }
 
-//存储路由
 export const saveMenu = useStorage<Menu[]>('saveMenu',[])
 export const saveRouter = useStorage<Router[]>('saveRouter',[])
+export const saveUser = useStorage<object>('saveUser',{})
 
 addRouter(saveRouter.value)
 

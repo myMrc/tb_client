@@ -10,24 +10,28 @@ axios.interceptors.request.use(res => {
   res.headers['authorization'] = localGet('token')
   return res
 },err => {
-  ElMessage.error('请求Exception！')
+  ElMessage.error(err)
   return Promise.reject(err)
 })
 
 // 响应拦截器。
 axios.interceptors.response.use(res => {
-  res.data.code == 1? ElMessage.success(res.data.msg) : ElMessage.error(res.data.msg)
-  return res.data
+  if(res.data.code == 1) {
+    ElMessage.success(res.data.msg)
+    return res.data.data
+  }
+  ElMessage.error(res.data.msg)
+  return Promise.reject(res)
 },err => {
-  ElMessage.error('响应Exception！')
+  ElMessage.error(err)
   return Promise.reject(err)
 })
 
 //用户
 export const login = (user:object) => {return axios.post(`/api/user/login?`+qs.stringify(user))}
 export const register = (user:object) => {return axios.post(`/api/user/register?`+qs.stringify(user))}
-export const updataUser = (reloId:number) => {return axios.put(`/api/user/`+reloId)}
-export const selectUser = () => {return axios.get(`/api/user`)}
+export const updataUser = (roleId:number) => {return axios.put(`/api/user/`+roleId)}
+// export const selectUser = () => {return axios.get(`/api/user`)}
 export const deleteUser = () => {return axios.delete(`/api/user`)}
 
 //供应商
@@ -36,7 +40,11 @@ export const addSup = (sup:object) => {return axios.post(`/api/sup?`+qs.stringif
 export const updateSup = (userForm:object) => {return axios.put(`/api/sup?`,qs.stringify(userForm))}
 
 //产品线
-export const selectSupProLine = () => {return axios.get(`/api/supProLine`)}
+export const selectProductline = (seachTex:string) => {return axios.get(`/api/productline?seachTex=`+seachTex)}
+export const selectProductlineById = (id:number) => {return axios.get(`/api/productline/`+id)}
+export const addProductline = (userForm:object) => {return axios.post(`/api/productline?`+qs.stringify(userForm))}
+export const updateProductline = (userForm:object) => {return axios.put(`/api/productline?`+qs.stringify(userForm))}
+export const deleteProductline = (productlineId:number) => {return axios.delete(`/api/productline/`+productlineId)}
 
 //产品
 export const selectSupPro = () => {return axios.get(`/api/supPro`)}

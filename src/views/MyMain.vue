@@ -146,8 +146,8 @@ const supSubmit = async () => {
   saveRouter.value = supRouter
   saveMenu.value = supMenu
   addRouter(saveRouter.value)
-  router.push("/")
   supDialog.value = false
+  router.push("/")
 }
 const resSubmit = async () => {
   await addRes(resForm.value)
@@ -156,8 +156,8 @@ const resSubmit = async () => {
   saveRouter.value = resRouter
   saveMenu.value = resMenu
   addRouter(saveRouter.value)
-  router.push("/")
   resDialog.value = false
+  router.push("/")
 }
 </script>
 <style>

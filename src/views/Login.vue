@@ -28,15 +28,14 @@
   </div>
 </template>
 <script lang="ts" setup>
-  import { reactive, ref } from 'vue'
+  import { ref } from 'vue'
   import { login, register } from '../axios/index'
-  import router, { resetRouter, addRouter, saveRouter, saveMenu} from '../router/index'
+  import router, { resetRouter, addRouter, saveRouter, saveMenu, saveUser} from '../router/index'
   import { localSet, supRouter, resRouter, supMenu, resMenu, allRouter } from '../utils/index'
-  import { useUserInfo } from '../store/index'
 
   const user = ref({})
   //模态框
-  const shadowGroup = reactive([{
+  const shadowGroup = ref([{
       name: 'Basic Shadow',
       type: '',
   }])
@@ -45,25 +44,23 @@
   }
   //登录
   const loginFun = async () =>{
-    await login(user.value).then(res => {
-      localSet('token', res.data) //保存token令牌
-      resetRouter() //移除路由
-      let user = JSON.parse(atob(res.data.split(".")[1])).user; //从token获取用户信息
-      if(user.reloId == 1){
-        saveRouter.value = supRouter
-        saveMenu.value = supMenu
-      }else if(user.reloId == 2){
-        saveRouter.value = resRouter
-        saveMenu.value = resMenu
-      }else {
-        saveRouter.value = allRouter
-        saveMenu.value = []
-      }
-      useUserInfo().user = user.userName  //用户名称
-      useUserInfo().relo = user.reloId   //用户角色
-      addRouter(saveRouter.value)       //添加路由
-      router.push("/")                 //跳转页面
-    })
+    const token:any = await login(user.value)
+    const userInfo = JSON.parse(atob(token.split('.')[1])).user
+    localSet('token', token)
+    resetRouter()
+    saveUser.value = userInfo
+    if(userInfo.roleId == 1){
+      saveMenu.value = supMenu
+      saveRouter.value = supRouter
+    }else if(userInfo.roleId == 2){
+      saveRouter.value = resRouter
+      saveMenu.value = resMenu
+    }else {
+      saveRouter.value = allRouter
+      saveMenu.value = []
+    }
+    addRouter(saveRouter.value)
+    router.push("/")
   }
   //注册
   const registerFun = ()=>{
