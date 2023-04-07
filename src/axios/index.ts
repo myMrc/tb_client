@@ -17,7 +17,7 @@ axios.interceptors.request.use(res => {
 // 响应拦截器。
 axios.interceptors.response.use(res => {
   if(res.data.code == 1) {
-    ElMessage.success(res.data.msg)
+    if (res.data.msg != null)ElMessage.success(res.data.msg)
     return res.data.data
   }
   ElMessage.error(res.data.msg)
@@ -40,14 +40,16 @@ export const addSup = (sup:object) => {return axios.post(`/api/sup?`+qs.stringif
 export const updateSup = (userForm:object) => {return axios.put(`/api/sup?`,qs.stringify(userForm))}
 
 //产品线
-export const selectProductline = (seachTex:string) => {return axios.get(`/api/productline?seachTex=`+seachTex)}
+export const selectProductline = (seachTex:string,current:number,pageSize:number) => {return axios.get(`/api/productline?seachTex=`+seachTex+'&current='+current+'&pageSize='+pageSize)}
 export const selectProductlineById = (id:number) => {return axios.get(`/api/productline/`+id)}
 export const addProductline = (userForm:object) => {return axios.post(`/api/productline?`+qs.stringify(userForm))}
 export const updateProductline = (userForm:object) => {return axios.put(`/api/productline?`+qs.stringify(userForm))}
 export const deleteProductline = (productlineId:number) => {return axios.delete(`/api/productline/`+productlineId)}
 
 //产品
-export const selectSupPro = () => {return axios.get(`/api/supPro`)}
+export const selectProduct = (seachTex:string,current:number,pageSize:number) => {return axios.get(`/api/product?seachTex=`+seachTex+'&current='+current+'&pageSize='+pageSize)}
+export const selectProductByPl = (plId:number) => {return axios.get(`/api/product/`+plId)}
+
 
 //分销商
 export const selectDis = () => {return axios.get(`/api/dis`)}

@@ -10,7 +10,7 @@
 
           <div v-if="saveMenu.length >0" @click="showMenu = showMenu ? false : true"><div></div></div>
         </div>
-        <p style="font-family: 华文新魏;font-size: 30px;margin: 10px">网络分销管理系统</p>
+        <p style="font-family: 华文新魏;font-size: 30px;margin: 10px">hello管理系统</p>
         <el-dropdown @command="handleCommand">
               <span class="el-dropdown-link" style="font-size: 16px !important;">
                   <Avatar width="30" style="margin-right: 5px"/>

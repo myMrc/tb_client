@@ -65,7 +65,6 @@ button:focus-visible {
   text-align: center;
   font-family: "Segoe Ui Semibold";
   background-color: #213547;
-  /*background-color: #18222c;*/
 }
 
 @media (prefers-color-scheme: light) {
