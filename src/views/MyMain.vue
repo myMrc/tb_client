@@ -128,8 +128,9 @@
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { updataUser, addSup, addRes } from '../axios/index'
-import { resetRouter, addRouter, saveRouter, saveMenu} from '../router/index'
+import { update} from '../axios/user'
+import { addSup, addRes } from '../axios/index'
+import { removeRouter, insertRouter, saveRouter, saveMenu} from '../router/index'
 import { supRouter, resRouter, supMenu, resMenu } from '../utils/index'
 import router from "../router";
 
@@ -141,21 +142,21 @@ const currentDate = ref(new Date())
 
 const supSubmit = async () => {
   await addSup(supForm.value)
-  await updataUser(1)
-  resetRouter()
+  await update(1)
+  removeRouter()
   saveRouter.value = supRouter
   saveMenu.value = supMenu
-  addRouter(saveRouter.value)
+  insertRouter(saveRouter.value)
   supDialog.value = false
   router.push("/")
 }
 const resSubmit = async () => {
   await addRes(resForm.value)
-  await updataUser(2)
-  resetRouter()
+  await update(2)
+  removeRouter()
   saveRouter.value = resRouter
   saveMenu.value = resMenu
-  addRouter(saveRouter.value)
+  insertRouter(saveRouter.value)
   resDialog.value = false
   router.push("/")
 }

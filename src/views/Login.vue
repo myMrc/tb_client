@@ -21,7 +21,7 @@
             </el-form>
             <div>
                 <el-button @click="loginFun">Login</el-button>
-                <el-button @click="registerFun">Register</el-button>
+                <el-button @click="register">Register</el-button>
             </div>
         </div>
     </div>
@@ -29,8 +29,8 @@
 </template>
 <script lang="ts" setup>
   import { ref } from 'vue'
-  import { login, register } from '../axios/index'
-  import router, { resetRouter, addRouter, saveRouter, saveMenu, saveUser} from '../router/index'
+  import { login, insert, selectById } from '../axios/user'
+  import router, { removeRouter, insertRouter, saveRouter, saveMenu, saveUser} from '../router/index'
   import { localSet, supRouter, resRouter, supMenu, resMenu, allRouter } from '../utils/index'
 
   const user = ref({})
@@ -44,26 +44,28 @@
   }
   //登录
   const loginFun = async () =>{
-    const token:any = await login(user.value)
-    const userInfo = JSON.parse(atob(token.split('.')[1])).user
-    localSet('token', token)
-    resetRouter()
-    saveUser.value = userInfo
-    if(userInfo.roleId == 1){
-      saveMenu.value = supMenu
-      saveRouter.value = supRouter
-    }else if(userInfo.roleId == 2){
-      saveRouter.value = resRouter
-      saveMenu.value = resMenu
-    }else {
-      saveRouter.value = allRouter
-      saveMenu.value = []
-    }
-    addRouter(saveRouter.value)
+    await login(user.value).then((res:any) => {
+      localSet('token', res)
+    })
+    removeRouter()
+    await selectById().then((res:any) => {
+      saveUser.value = res
+      if(res.roleId == 1){
+        saveMenu.value = supMenu
+        saveRouter.value = supRouter
+      }else if(res.roleId == 2){
+        saveRouter.value = resRouter
+        saveMenu.value = resMenu
+      }else {
+        saveRouter.value = allRouter
+        saveMenu.value = []
+      }
+    })
+    insertRouter(saveRouter.value)
     router.push("/")
   }
   //注册
-  const registerFun = ()=>{
-    register(user.value)
+  const register = ()=>{
+    insert(user.value)
   }
 </script>

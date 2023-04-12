@@ -22,14 +22,14 @@ const router = createRouter({
 })
 
 //移除路由
-export const resetRouter = () =>{
+export const removeRouter = () =>{
   for (const r of clientRouters) {
     router.addRoute(r)
   }
 }
 
 //添加路由
-export const addRouter = (saveRouterValue:Router[]) => {
+export const insertRouter = (saveRouterValue:Router[]) => {
   for (const r of saveRouterValue) {
       router.addRoute({
         name:r.name,
@@ -43,6 +43,6 @@ export const saveMenu = useStorage<Menu[]>('saveMenu',[])
 export const saveRouter = useStorage<Router[]>('saveRouter',[])
 export const saveUser = useStorage<object>('saveUser',{})
 
-addRouter(saveRouter.value)
+insertRouter(saveRouter.value)
 
 export default router

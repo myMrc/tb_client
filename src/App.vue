@@ -10,7 +10,10 @@
 
           <div v-if="saveMenu.length >0" @click="showMenu = showMenu ? false : true"><div></div></div>
         </div>
-        <p style="font-family: 华文新魏;font-size: 30px;margin: 10px">hello管理系统</p>
+        <div style="font-size: 30px;">
+        <p style="font-family: 华文新魏;margin: 10px">《
+          <span style="font-family: 小米兰亭">ssm</span>框架》测试</p>
+        </div>
         <el-dropdown @command="handleCommand">
               <span class="el-dropdown-link" style="font-size: 16px !important;">
                   <Avatar width="30" style="margin-right: 5px"/>
@@ -56,7 +59,7 @@
         </el-aside>
         </template>
         <!-- main页面 -->
-        <el-main style="padding: 24px">
+        <el-main>
           <router-view />
         </el-main>
       </el-container>
@@ -68,7 +71,7 @@
 import { ref } from 'vue'
 import router, { saveMenu, saveUser } from './router/index'
 import { localGet, localRemove } from './utils/index'
-import { deleteUser } from "./axios/index";
+import { deleteById } from "./axios/user";
 import { useTitle } from './store/index'
 import { ElMessage } from 'element-plus'
 import { Index } from './components/index'
@@ -76,7 +79,6 @@ import { Index } from './components/index'
 const noMenu = ['/login']
 const showMenu = ref(true)
 const showHead = ref(true)
-
 
 //路由-跳转
 router.beforeEach((to, from, next) => {
@@ -95,7 +97,7 @@ const handleCommand = (command: string | number | object) => {
     router.push("/login")
   }
   if (command == "Del"){
-    deleteUser()
+    deleteById()
     saveMenu.value = []
     saveUser.value = []
     localRemove('token')

@@ -22,3 +22,11 @@ export interface Router{
 export interface Icon{
   [p:string]:any
 }
+
+//表格
+// export interface Result{
+//   size:number,
+//   total:number,
+//   current:number,
+//   records:object
+// }

@@ -28,6 +28,7 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  background-color: #213547;
 }
 
 h1 {
@@ -64,7 +65,6 @@ button:focus-visible {
   color: #dbdbdb;
   text-align: center;
   font-family: "Segoe Ui Semibold";
-  background-color: #213547;
 }
 
 @media (prefers-color-scheme: light) {

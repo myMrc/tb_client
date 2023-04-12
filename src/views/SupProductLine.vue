@@ -11,12 +11,12 @@
       </div>
     </template>
 
-    <el-row style="margin-bottom: 10px">
+    <el-row style="margin-bottom: 17px">
       <el-col :span="4" style="text-align: left">
-        <el-input v-model="seachTex" @input="seachProLine" placeholder="搜索产品线" />
+        <el-input v-model="seachTex" @input="search" placeholder="搜索产品线" />
       </el-col>
       <el-col :span="20" style="text-align: right">
-        <el-button :icon="Plus" text type="primary" size="large" @click="onDialog()"><b>添加产品线</b></el-button>
+        <el-button :icon="Plus" text type="primary" @click="onDialog()"><b>添加产品线</b></el-button>
       </el-col>
     </el-row>
 
@@ -25,9 +25,26 @@
     >
       <el-table-column label="序号" type="index" width="80" />
       <el-table-column prop="productLineName" label="产品线" />
-      <el-table-column prop="productLineId" label="包含产品数量" />
-        <el-table-column prop="scopes" label="零售价范围" width="350" >
-        </el-table-column>
+      <el-table-column label="包含产品数量" >
+        <template #default="scope">
+          <el-popover effect="light" trigger="hover" placement="top" width="auto">
+            <template #default v-if="proList.length > 0">
+              <div style="text-align: center">
+                <p style="color: #409eff">产品目录</p>
+                <p v-for="pro in proList">{{pro.productName}}</p>
+              </div>
+            </template>
+            <template #reference>
+              <el-tag v-if="scope.row.productCount > 0"
+                      type="success"
+                      @mouseover="selectPro(scope.row.productLineId)">{{scope.row.productCount}}
+              </el-tag>
+              <el-tag v-eles @mouseover="selectPro(scope.row.productLineId)">{{scope.row.productCount}}</el-tag>
+            </template>
+          </el-popover>
+        </template>
+      </el-table-column>
+      <el-table-column prop="scopes" label="零售价范围" width="350" />
       <el-table-column prop="purPrice" label="采购价" width="200" />
       <el-table-column label="操作" width="120">
         <template #default="scope">
@@ -36,7 +53,7 @@
               title="确定删除吗？"
               confirmButtonText='确定'
               cancelButtonText='取消'
-              @confirm="handleDeleteOne(scope.row.productLineId)">
+              @confirm="remove(scope.row.productLineId)">
             <template #reference>
               <el-button link type="primary" size="small">Remove</el-button>
             </template>
@@ -79,7 +96,7 @@
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="dialog = false">Cancel</el-button>
-        <el-button type="primary" @click="onSubmit">
+        <el-button type="primary" @click="onSubmit(userForm.productLineId)">
           Confirm
         </el-button>
       </span>
@@ -92,19 +109,14 @@ import { onMounted, ref} from 'vue'
 import { Plus } from '@element-plus/icons-vue'
 import { useTitle } from '../store/index'
 import { ElMessage } from 'element-plus'
-import {
-  selectProductline,
-  addProductline,
-  updateProductline,
-  deleteProductline,
-  selectProductlineById,
-  selectProductByPl
-} from '../axios/index'
+import { select, selectById, insert, update, deleteById } from '../axios/productline'
+import { selectList } from '../axios/product'
 
 const size = ref('')        //尺寸
 const seachTex = ref('')    //搜索框
-const tableData = ref()           //表格数据
-const userForm = ref()            //表单信息
+const tableData = ref([])   //表格数据
+const userForm = ref({})    //表单信息
+const proList = ref({})     //产品列表
 const dialog = ref(false)   //对话框
 const dialogTitle = ref('') //框标题
 const total = ref(0)        //总条数
@@ -113,14 +125,19 @@ const pageSize = ref(10)    //页大小
 
 const changePage = (val:number) => {
   current.value = val
-  seachProLine()
+  search()
 }
 
-//打开对话框
+//产品目录
+const selectPro = async (id:number) => {
+  proList.value = await selectList(id)
+}
+
+//打开表单
 const onDialog = async (id:number) => {
   if(id >0){
     dialogTitle.value = '修改产品线信息'
-    userForm.value = await selectProductlineById(id)
+    userForm.value = await selectById(id)
   } else {
     dialogTitle.value = '添加产品线信息'
     userForm.value = {}
@@ -128,36 +145,27 @@ const onDialog = async (id:number) => {
   dialog.value = true
 }
 //提交表单
-const onSubmit = async () => {
-  userForm.value.productLineId > 0? await updateProductline(userForm.value) : await addProductline(userForm.value)
-  dialog.value = false
-  seachProLine()
+const onSubmit = async (id:number) => {
+  id > 0 ? await update(userForm.value) : await insert(userForm.value)
+  await search()
 }
 //模糊搜索
-const seachProLine = async () => {
-  const res = await selectProductline(seachTex.value,current.value,pageSize.value)
-  tableData.value = res.records
-  total.value = res.total
-  current.value = res.current
-  pageSize.value = res.size
-  for (let i = 0; i < tableData.value.length; i++) {
-    tableData.value[i].scopes = '标准价 '+tableData.value[i].scopeBegin +'% --- 标准价 '+ tableData.value[i].scopeEnd +'%'
-    tableData.value[i].purPrice = '标准价 '+tableData.value[i].scopeBegin +'%'
-  }
+const search = () => {
+  select(seachTex.value,current.value,pageSize.value).then((res:any) => {
+    total.value = res.total
+    pageSize.value = res.size
+    current.value = res.current
+    tableData.value = res.records
+  })
 }
-//删除
-const handleDeleteOne = async (id:number) => {
-  let count:any = await selectProductByPl(id)
-  if ( count > 0){
-    ElMessage.warning("产品线包含产品不可删除！")
-    return
-  }
-  await deleteProductline(id)
-  await seachProLine()
+//删除数据
+const remove = async (id:number) => {
+  await deleteById(id)
+  await search()
 }
 //页面加载
 onMounted(() => {
-  seachProLine()
+  search()
 })
 </script>
 
